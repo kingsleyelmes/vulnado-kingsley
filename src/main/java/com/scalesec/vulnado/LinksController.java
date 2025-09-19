@@ -4,6 +4,9 @@ import org.springframework.boot.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.autoconfigure.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
 import java.io.Serializable;
 import java.io.IOException;
@@ -14,6 +17,9 @@ import java.io.IOException;
 public class LinksController {
   @RequestMapping(value = "/links", produces = "application/json")
   List<String> links(@RequestParam String url) throws IOException{
+    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(url);
+    URI uri = uriComponentsBuilder.build().toUri();
+    String path = uri.getPath();
     return LinkLister.getLinks(url);
   }
   @RequestMapping(value = "/links-v2", produces = "application/json")
