@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.UUID;
 
+import org.postgresql.jdbc.PreferQueryMode;
+
 public class Postgres {
 
     public static Connection connection() {
@@ -19,8 +21,13 @@ public class Postgres {
                     .append(System.getenv("PGHOST"))
                     .append("/")
                     .append(System.getenv("PGDATABASE")).toString();
-            return DriverManager.getConnection(url,
-                    System.getenv("PGUSER"), System.getenv("PGPASSWORD"));
+
+            java.util.Properties props = new java.util.Properties();
+            props.setProperty("user", System.getenv("PGUSER"));
+            props.setProperty("password", System.getenv("PGPASSWORD"));
+            props.setProperty("preferQueryMode", PreferQueryMode.SIMPLE.value());
+
+            return DriverManager.getConnection(url, props);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
